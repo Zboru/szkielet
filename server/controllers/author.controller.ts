@@ -7,10 +7,7 @@ export class AuthorController {
     public static async getAuthors(req: Request, res: Response): Promise<void> {
         const authors = await Author.find({});
         try {
-            res.status(200).json({
-                status: "Success",
-                data: { authors }
-            })
+            res.status(200).json(authors)
         } catch (err) {
             res.status(500).json({
                 status: "Failed",
@@ -22,10 +19,7 @@ export class AuthorController {
     public static async getAuthor(req: Request, res: Response): Promise<void> {
         try {
             const author = await Author.findById(req.params.id);
-            res.status(200).json({
-                status: "Success",
-                data: { author }
-            })
+            res.status(200).json(author)
         } catch (err) {
             res.status(500).json({
                 status: "Failed",
@@ -39,10 +33,7 @@ export class AuthorController {
 
         try {
             author.save();
-            res.status(201).json({
-                status: 'Success',
-                data: { author }
-            })
+            res.status(201).json(author)
         } catch (err) {
             res.status(500).json({
                 status: 'Failed',
@@ -57,10 +48,7 @@ export class AuthorController {
                 new: true,
                 runValidators: true
             });
-            res.status(200).json({
-                status: "Success",
-                data: { author }
-            })
+            res.status(200).json(author)
         } catch (err) {
             res.status(500).json({
                 status: "Failed",

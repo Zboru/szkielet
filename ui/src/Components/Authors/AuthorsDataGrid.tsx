@@ -1,13 +1,13 @@
 import { Delete, Edit, ZoomIn } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import { DataGrid, GridColDef, GridRowsProp } from "@mui/x-data-grid";
-import { Book } from "../../Types/Models";
+import { Author } from "../../Types/Models";
 
 interface IProps {
-    books: Book[]
+    authors: Author[]
 }
 
-export default function BooksDataGrid(props: IProps) {
+export default function AuthorsDataGrid(props: IProps) {
 
     const renderButtons = () => {
         return (
@@ -25,15 +25,15 @@ export default function BooksDataGrid(props: IProps) {
         )
     }
 
-    const rows: GridRowsProp = props.books.map(book => {
-        return {id: book._id, name: book.name, author: `${book.author.firstName} ${book.author.lastName}`, pageCount: book.pageCount};
+    const rows: GridRowsProp = props.authors.map(author => {
+        return {id: author._id, firstname: author.firstName, lastname: author.lastName, dateofbirth: author.dateOfBirth};
     });
 
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'ID' },
-        { field: 'name', headerName: 'Nazwa książki', flex: 1 },
-        { field: 'author', headerName: 'Autor', width: 150 },
-        { field: 'pageCount', headerName: 'Liczba stron', width: 150 },
+        { field: 'firstname', headerName: 'Imię', flex: 1 },
+        { field: 'lastname', headerName: 'Nazwisko', width: 150 },
+        { field: 'dateofbirth', headerName: 'Data urodzenia', width: 150 },
         { field: 'actions', headerName: 'Akcje', width: 150, renderCell: renderButtons },
     ];
 

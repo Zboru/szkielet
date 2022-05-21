@@ -1,21 +1,21 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import AddBookButton from "../../Components/Books/AddBookButton";
-import BooksDataGrid, { Book } from "../../Components/Books/BooksDataGrid";
+import BooksDataGrid from "../../Components/Books/BooksDataGrid";
+import { Book } from "../../Types/Models";
+import { httpManager } from "../../Utils/httpManager";
 
 export default function Books() {
 
     const [books, setBooks] = useState<Book[]>([]);
 
-    useEffect(()=>{
-        axios.get('//localhost:3080/api/books').then(response => {
+    useEffect(() => {
+        httpManager.get("/api/books").then(response => {
             setBooks(response.data);
         })
     }, [])
 
     return (
         <div>
-            <span>{JSON.stringify(books)}</span>
             <h1>Książki</h1>
             <AddBookButton />
             <BooksDataGrid books={books} />
