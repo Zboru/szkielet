@@ -1,8 +1,23 @@
 import { Delete, Edit, ZoomIn } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import { DataGrid, GridColDef, GridRowsProp } from "@mui/x-data-grid";
+import { useEffect } from "react";
 
-export default function BooksDataGrid() {
+interface IProps {
+    books: Book[]
+}
+export interface Book {
+    _id: String,
+    name: String,
+    pageCount: Number,
+    author: {
+        firstName: String,
+        lastName: String,
+        dateOfBirth: String
+    }
+}
+
+export default function BooksDataGrid(props: IProps) {
 
     const renderButtons = () => {
         return (
@@ -20,16 +35,19 @@ export default function BooksDataGrid() {
         )
     }
 
-    const rows: GridRowsProp = [
-        { id: 1, name: "Stary człowiek i morze 1", author: "Ernest Hemingway", publisher: "Super wydawca" },
-        { id: 2, name: "Stary człowiek i morze 2", author: "Ernest Hemingway", publisher: "Super wydawca" },
-        { id: 3, name: "Stary człowiek i morze 3", author: "Ernest Hemingway", publisher: "Super wydawca" },
-    ];
+    useEffect(()=>{
+        console.log(props.books);
+    }, [props.books])
+
+    const rows: GridRowsProp = props.books.map(book => {
+        return {id: book._id, name: book.name, author: `${book.author.firstName} ${book.author.lastName}`, pageCount: book.pageCount};
+    });
 
     const columns: GridColDef[] = [
+        { field: 'id', headerName: 'ID' },
         { field: 'name', headerName: 'Nazwa książki', flex: 1 },
         { field: 'author', headerName: 'Autor', width: 150 },
-        { field: 'publisher', headerName: 'Wydawca', width: 150 },
+        { field: 'pageCount', headerName: 'Liczba stron', width: 150 },
         { field: 'actions', headerName: 'Akcje', width: 150, renderCell: renderButtons },
     ];
 

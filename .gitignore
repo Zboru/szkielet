@@ -11,6 +11,7 @@ server/node_modules
 
 # production
 ui/build
+server/.env
 
 # misc
 .DS_Store
