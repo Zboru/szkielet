@@ -1,13 +1,14 @@
 export interface Book {
-    _id: String,
-    name: String,
-    pageCount: Number,
+    _id: string,
+    name: string,
+    pageCount: number,
     author: Author
 }
 
 export interface Author {
-    _id: String,
-    firstName: String,
-    lastName: String,
-    dateOfBirth: String
+    _id: string,
+    firstName: string,
+    lastName: string,
+    dateOfBirth: string,
+    books?: Book[]
 }

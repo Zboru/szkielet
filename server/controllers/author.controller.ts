@@ -5,7 +5,8 @@ import Author from "../models/Author";
 export class AuthorController {
 
     public static async getAuthors(req: Request, res: Response): Promise<void> {
-        const authors = await Author.find({});
+        const authors = await Author.find({}).populate('books');
+        console.log(authors);
         try {
             res.status(200).json(authors)
         } catch (err) {

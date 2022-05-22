@@ -17,6 +17,9 @@ export default function NavigationBar() {
             <Button variant="text">
                 <Link to="/authors">Autorzy</Link>
             </Button>
+            <Button variant="text">
+                <Link to="/summary">Lista główna</Link>
+            </Button>
         </Bar>
     )
 }

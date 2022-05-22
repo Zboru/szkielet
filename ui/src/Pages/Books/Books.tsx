@@ -18,7 +18,7 @@ export default function Books() {
         <div>
             <h1>Książki</h1>
             <AddBookButton />
-            <BooksDataGrid books={books} />
+            <BooksDataGrid books={books}/>
             <AddBookButton />
         </div>
     )

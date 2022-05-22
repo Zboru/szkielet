@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cookieParser from 'cookie-parser';
+import cors from "cors";
 require("dotenv").config();
 const path = require('path');
 require("./config/database.config");
@@ -19,6 +20,7 @@ class App {
         this.express.use(bodyParser.json());
         this.express.use(bodyParser.urlencoded({ extended: true }));
         this.express.use(cookieParser(process.env.COOKIE_SECRET));
+        this.express.use(cors());
         this.express.use(express.static(path.join(__dirname, '../ui/build')));
     }
 

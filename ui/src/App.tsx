@@ -8,7 +8,9 @@ import Layout from './Components/Layout/Layout';
 import AddAuthor from './Pages/Authors/AddAuthor';
 import Authors from './Pages/Authors/Authors';
 import AddBook from './Pages/Books/AddBook';
+import ShowBook from './Pages/Books/ShowBook';
 import Books from './Pages/Books/Books';
+import SummaryPage from './Pages/SummaryPage';
 
 function App() {
   return (
@@ -17,12 +19,17 @@ function App() {
         <CssBaseline>
           <Routes>
             <Route path="/" element={<Layout />}>
-              <Route path="/books" element={<Books />} />
-              <Route path="/books/add" element={<AddBook />} />
-              <Route path="/authors" element={<Authors />} />
-              <Route path="/authors/add" element={<AddAuthor />} />
+              <Route path="books">
+                <Route path="/books" element={<Books />} />
+                <Route path="add" element={<AddBook />} />
+                <Route path=":id" element={<ShowBook />} />
+              </Route>
+              <Route path="authors" element={<Authors />} />
+              <Route path="authors/add" element={<AddAuthor />} />
+              <Route path="/summary" element={<SummaryPage/>} />
             </Route>
           </Routes>
+          <div id="toasts" />
         </CssBaseline>
       </LocalizationProvider>
     </div>

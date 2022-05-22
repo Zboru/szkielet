@@ -7,4 +7,12 @@ export class httpManager {
     public static async get(path: string) {
         return axios.get(this.apiUrl + path);
     }
+
+    public static async post(path: string, payload: unknown) {
+        return axios.post(this.apiUrl + path, payload);
+    }
+
+    public static async delete(path: string) {
+        return axios.delete(this.apiUrl + path);
+    }
 }

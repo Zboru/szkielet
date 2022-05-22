@@ -1,6 +1,8 @@
 import { Save } from "@mui/icons-material";
 import { Alert, Button, MenuItem, Select, SelectChangeEvent, Snackbar, Stack, TextField } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Author } from "../../Types/Models";
+import { httpManager } from "../../Utils/httpManager";
 
 export default function AddBook() {
 
@@ -8,6 +10,13 @@ export default function AddBook() {
     const [pageCount, setPageCount] = useState("");
     const [author, setAuthor] = useState("");
     const [snackbarOpen, setOpen] = useState(false);
+    const [availableAuthors, setAvailableAuthors] = useState<Author[]>([]);
+
+    useEffect(() => {
+        httpManager.get("/api/authors").then(response => {
+            setAvailableAuthors(response.data);
+        })
+    }, [])
 
     const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
@@ -22,8 +31,14 @@ export default function AddBook() {
     };
 
     function handleClick() {
-        setOpen(true);
-        console.log("save");
+        const payload = {
+            name,
+            pageCount,
+            author
+        }
+        httpManager.post("/api/books", payload).then(response => {
+            setOpen(true);
+        })
     }
 
     const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
@@ -41,7 +56,9 @@ export default function AddBook() {
                 <TextField value={name} onChange={handleChangeName} placeholder="Nazwa książki" />
                 <TextField value={pageCount} onChange={handleChangePageCount} placeholder="Liczba stron" />
                 <Select value={author} onChange={handleChangeAuthor} placeholder="Wydawca">
-                    <MenuItem value={10}>Ten</MenuItem>
+                    {availableAuthors.map(author => {
+                        return <MenuItem key={author._id} value={author._id}>{author.firstName} {author.lastName}</MenuItem>
+                    })}
                 </Select>
             </Stack>
             <Button sx={{ mt: 2 }}
