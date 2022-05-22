@@ -1,9 +1,8 @@
-import { Delete, Edit, ZoomIn } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
 import { DataGrid, GridColDef, GridRowsProp } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { Book } from "../../Types/Models";
 import DeleteBookDialog from "./DeleteBookDialog";
+import EditBookDialog from "./EditBookDialog";
 import ShowBookLink from "./ShowBookLink";
 
 interface IProps {
@@ -24,12 +23,7 @@ export default function BooksDataGrid(props: IProps) {
     const renderButtons = (params: {row: Book}) => {
         return (
             <div style={{display: 'flex'}}>
-                {/* <IconButton>
-                    <ZoomIn />
-                </IconButton>
-                <IconButton>
-                    <Edit />
-                </IconButton> */}
+                <EditBookDialog book={params.row}/>
                 <ShowBookLink book={params.row}/>
                 <DeleteBookDialog onDelete={onDelete} book={params.row}/>
             </div>

@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import Author from "../models/Author";
 import Book from "../models/Book";
 
 export class BookController {
@@ -32,7 +33,12 @@ export class BookController {
 
         try {
             book.save();
-            res.status(201).json(book)
+
+            const author = await Author.findById(book.author);
+            author.books.push(book._id);
+            author.save();
+            
+            res.status(201).json(book);
         } catch (err) {
             res.status(500).json({
                 status: 'Failed',

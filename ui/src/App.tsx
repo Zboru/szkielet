@@ -2,7 +2,6 @@ import { CssBaseline } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import plLocale from 'date-fns/locale/pl';
-import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Layout from './Components/Layout/Layout';
 import AddAuthor from './Pages/Authors/AddAuthor';
@@ -24,12 +23,14 @@ function App() {
                 <Route path="add" element={<AddBook />} />
                 <Route path=":id" element={<ShowBook />} />
               </Route>
-              <Route path="authors" element={<Authors />} />
-              <Route path="authors/add" element={<AddAuthor />} />
-              <Route path="/summary" element={<SummaryPage/>} />
+              <Route path="authors">
+                <Route path="/authors" element={<Authors />} />
+                <Route path="authors/add" element={<AddAuthor />} />
+              </Route>
+              <Route path="/summary" element={<SummaryPage />} />
             </Route>
           </Routes>
-          <div id="toasts" />
+          <div id="toasts"/>
         </CssBaseline>
       </LocalizationProvider>
     </div>

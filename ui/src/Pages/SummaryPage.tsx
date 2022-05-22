@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { Link } from "react-router-dom";
 import { Author } from "../Types/Models";
 import { httpManager } from "../Utils/httpManager";
 
@@ -11,10 +12,27 @@ export default function SummaryPage() {
         });
     },[]);
 
+    const AuthorList = () => {
+        return (
+            <ol>
+                {authors.map(author => {
+                    return <li>
+                        <Link to={`/authors/${author._id}`}>{author.firstName} {author.lastName}</Link>
+                        <ol>
+                            {author.books?.map(book => {
+                                return <li><Link to={`/books/${book._id}`}>{book.name}</Link></li>
+                            })}
+                        </ol>
+                    </li>
+                })}
+            </ol>
+        )
+    }
+
     return (
         <div>
             <h2>Wszystkie książki</h2>
-            <pre>{JSON.stringify(authors)}</pre>
+            <AuthorList/>
         </div>
     )
 }
