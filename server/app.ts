@@ -29,18 +29,12 @@ class App {
         this.express.use(bookRoutes);
         this.express.use(authorRoutes);
 
-        // API Routes
-        this.express.get("/1", (req, res, next) => {
-            res.send("1");
-            // res.sendFile(path.join(__dirname, '../ui/build/index.html'));
-        });
-
         // Frontend route
         this.express.get("/", (req, res, next) => {
             res.sendFile(path.join(__dirname, '../ui/build/index.html'));
         });
 
-        // handle undefined routes
+        // Handle undefined routes
         this.express.use("*", (req, res, next) => {
             res.send("404");
         });
