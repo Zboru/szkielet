@@ -10,6 +10,9 @@ import AddBook from './Pages/Books/AddBook';
 import ShowBook from './Pages/Books/ShowBook';
 import Books from './Pages/Books/Books';
 import SummaryPage from './Pages/SummaryPage';
+import ShowAuthor from './Pages/Authors/ShowAuthor';
+import EditAuthor from './Pages/Authors/EditAuthor';
+import EditBook from './Pages/Books/EditBook';
 
 function App() {
   return (
@@ -21,11 +24,14 @@ function App() {
               <Route path="books">
                 <Route path="/books" element={<Books />} />
                 <Route path="add" element={<AddBook />} />
+                <Route path=":id/edit" element={<EditBook />} />
                 <Route path=":id" element={<ShowBook />} />
               </Route>
               <Route path="authors">
                 <Route path="/authors" element={<Authors />} />
-                <Route path="authors/add" element={<AddAuthor />} />
+                <Route path="add" element={<AddAuthor />} />
+                <Route path=":id/edit" element={<EditAuthor />} />
+                <Route path=":id" element={<ShowAuthor />} />
               </Route>
               <Route path="/summary" element={<SummaryPage />} />
             </Route>

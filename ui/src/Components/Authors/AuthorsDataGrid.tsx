@@ -1,36 +1,51 @@
-import { Delete, Edit, ZoomIn } from "@mui/icons-material";
+import { Edit } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import { DataGrid, GridColDef, GridRowsProp } from "@mui/x-data-grid";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Author } from "../../Types/Models";
+import DeleteAuthorDialog from "./DeleteAuthorDialog";
+import ShowAuthorLink from "./ShowAuthorLink";
 
-interface IProps {
+interface IProps { 
     authors: Author[]
 }
 
 export default function AuthorsDataGrid(props: IProps) {
+    const [authors, setAuthors] = useState<Author[]>([]);
+    const navigate = useNavigate();
 
-    const renderButtons = () => {
+    useEffect(()=>{
+        setAuthors(props.authors);
+    },[props.authors]);
+
+
+    const onDelete = (author: Author) => {
+        setAuthors(authors.filter(b => b._id !== author._id));
+    }
+
+    const editAuthor = (author: Author) => {
+        navigate(`/authors/${author._id}/edit`);
+    }
+
+    const renderButtons = (params: {row: Author}) => {
         return (
-            <div>
-                <IconButton>
-                    <ZoomIn />
-                </IconButton>
-                <IconButton>
+            <div style={{display: 'flex'}}>
+                <ShowAuthorLink author={params.row}/>
+                <IconButton onClick={() => editAuthor(params.row)}>
                     <Edit />
                 </IconButton>
-                <IconButton>
-                    <Delete />
-                </IconButton>
+                <DeleteAuthorDialog onDelete={onDelete} author={params.row}/>
             </div>
         )
     }
 
-    const rows: GridRowsProp = props.authors.map(author => {
-        return {id: author._id, firstname: author.firstName, lastname: author.lastName, dateofbirth: author.dateOfBirth};
+    const rows: GridRowsProp = authors.map((author, index) => {
+        return {id: index, _id: author._id, firstname: author.firstName, lastname: author.lastName, dateofbirth: author.dateOfBirth};
     });
 
     const columns: GridColDef[] = [
-        { field: 'id', headerName: 'ID' },
+        { field: '_id', headerName: 'ID' },
         { field: 'firstname', headerName: 'Imię', flex: 1 },
         { field: 'lastname', headerName: 'Nazwisko', width: 150 },
         { field: 'dateofbirth', headerName: 'Data urodzenia', width: 150 },

@@ -18,7 +18,7 @@ export class AuthorController {
 
     public static async getAuthor(req: Request, res: Response): Promise<void> {
         try {
-            const author = await Author.findById(req.params.id);
+            const author = await Author.findById(req.params.id).populate('books');
             res.status(200).json(author)
         } catch (err) {
             res.status(500).json({

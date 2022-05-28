@@ -3,12 +3,13 @@ import { Button, FormHelperText, MenuItem, Select, Stack, TextField } from "@mui
 import { useFormik } from "formik"
 import { useEffect, useState } from "react";
 import * as Yup from 'yup';
+import InputMask from "react-input-mask";
 import { Author, Book } from "../../Types/Models";
 import { httpManager } from "../../Utils/httpManager";
 
 interface IProps {
     onSubmit?: Function,
-    initialData?: Book,
+    initialData?: Book | null,
     handleFormChange?: Function
 }
 
@@ -19,7 +20,7 @@ export default function BookDetailsForm(props: IProps) {
         initialValues: {
             _id: "",
             name: "",
-            pageCount: 0,
+            pageCount: "",
             author: "",
         },
         validationSchema: Yup.object({
@@ -54,7 +55,7 @@ export default function BookDetailsForm(props: IProps) {
         formik.setValues({
             _id: props.initialData?._id || "",
             name: props.initialData?.name || "",
-            pageCount: props.initialData?.pageCount || 0,
+            pageCount: String(props.initialData?.pageCount) || "",
             author: props.initialData?.author._id || ""
         });
     }, [props.initialData, availableAuthors]);
@@ -69,15 +70,38 @@ export default function BookDetailsForm(props: IProps) {
     return (
         <form onSubmit={formik.handleSubmit}>
             <Stack>
-                <TextField value={formik.values.name} error={!!formik.errors.name} onBlur={formik.handleBlur} onChange={formik.handleChange} name="name" placeholder="Nazwa książki" />
-                {formik.touched.name && formik.errors.name ? (
-                    <FormHelperText style={{ color: "red" }}>{formik.errors.name}</FormHelperText>
-                ) : null}
-                <TextField value={formik.values.pageCount} error={!!formik.errors.pageCount} onBlur={formik.handleBlur} onChange={formik.handleChange} name="pageCount" placeholder="Liczba stron" />
-                {formik.touched.pageCount && formik.errors.pageCount ? (
-                    <FormHelperText style={{ color: "red" }}>{formik.errors.pageCount}</FormHelperText>
-                ) : null}
-                <Select value={formik.values.author} error={!!formik.errors.author} onBlur={formik.handleBlur} onChange={formik.handleChange} name="author" placeholder="Wydawca">
+                <TextField
+                    value={formik.values.name}
+                    error={!!(formik.touched.name && formik.errors.name)}
+                    helperText={formik.touched.name && formik.errors.name ? formik.errors.name : null}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    name="name"
+                    label="Nazwa książki"
+                    placeholder="Nazwa książki" />
+                <InputMask
+                    mask="9999"
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    value={formik.values.pageCount}
+                    maskPlaceholder={""}
+                >
+                    <TextField
+                        error={!!(formik.touched.pageCount && formik.errors.pageCount)}
+                        helperText={formik.touched.pageCount && formik.errors.pageCount ? formik.errors.pageCount : null}
+                        sx={{ marginTop: '1rem' }}
+                        name="pageCount"
+                        label="Liczba stron"
+                        placeholder="Liczba stron" />
+                </InputMask>
+                <Select
+                    value={formik.values.author}
+                    error={!!(formik.touched.author && formik.errors.author)}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    sx={{ marginTop: '1rem' }}
+                    name="author"
+                    displayEmpty>
                     {availableAuthors.map(author => {
                         return <MenuItem key={author._id} value={author._id}>{author.firstName} {author.lastName}</MenuItem>
                     })}
@@ -85,15 +109,14 @@ export default function BookDetailsForm(props: IProps) {
                 {formik.touched.author && formik.errors.author ? (
                     <FormHelperText style={{ color: "red" }}>{formik.errors.author}</FormHelperText>
                 ) : null}
-                {!props.initialData ? (
-                    <Button sx={{ mt: 2, maxWidth: 'fit-content' }}
-                        type="submit"
-                        variant="contained"
-                        endIcon={<Save />}
-                    >
-                        Zapisz książkę
-                    </Button>
-                ) : null}
+                <Button sx={{ mt: 2, maxWidth: 'fit-content' }}
+                    type="submit"
+                    variant="contained"
+                    endIcon={<Save />}
+                    disabled={!!Object.keys(formik.errors).length}
+                >
+                    Zapisz książkę
+                </Button>
             </Stack>
         </form>
     )

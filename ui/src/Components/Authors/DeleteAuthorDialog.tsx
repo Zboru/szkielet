@@ -1,25 +1,25 @@
+import { Delete } from '@mui/icons-material';
 import { Alert, IconButton, Snackbar } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
+import { Author } from '../../Types/Models';
 import { httpManager } from '../../Utils/httpManager';
 import { Portal } from 'react-portal';
-import { Edit } from '@mui/icons-material';
-import { Book } from '../../Types/Models';
-import BookDetailsForm from './BookDetailsForm';
 
 interface IProps {
-    book: Book;
+    author: Author;
     onDelete?: Function;
 }
 
-export default function EditBookDialog(props: IProps) {
+export default function DeleteAuthorDialog(props: IProps) {
     const [open, setOpen] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [book, setBook] = useState<Book|null>(null);
+
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -33,22 +33,24 @@ export default function EditBookDialog(props: IProps) {
         setSnackbarOpen(false);
     };
 
-    const updateBook = () => {
-        const payload = {};
-        httpManager.put(`/api/books/${book?._id}`, payload).then(() => {
-            setSnackbarOpen(true);
-            setOpen(false);
-        })
+    const onDelete = () => {
+        if (props.onDelete) {
+            props.onDelete(props.author);
+        }
     }
 
-    const handleSubmit = (payload: Book) => {
-        setBook(payload);
+    const deleteAuthor = () => {
+        httpManager.delete(`/api/authors/${props.author._id}`).then(() => {
+            setSnackbarOpen(true);
+            setOpen(false);
+            onDelete();
+        })
     }
 
     return (
         <div>
             <IconButton onClick={handleClickOpen}>
-                <Edit />
+                <Delete />
             </IconButton>
             <Dialog
                 open={open}
@@ -57,15 +59,17 @@ export default function EditBookDialog(props: IProps) {
                 aria-describedby="alert-dialog-description"
             >
                 <DialogTitle id="alert-dialog-title">
-                    Edytuj książkę
+                    Usuń autora
                 </DialogTitle>
                 <DialogContent>
-                    <BookDetailsForm initialData={props.book} handleFormChange={handleSubmit} />
+                    <DialogContentText id="alert-dialog-description">
+                        Czy na pewno chcesz usunąć autora? Ta operacja jest nieodwracalna i powoduje utratę danych danego autora.
+                    </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Anuluj</Button>
-                    <Button variant='contained' onClick={updateBook} autoFocus>
-                        Edytuj
+                    <Button variant='contained' color="error" onClick={deleteAuthor} autoFocus>
+                        Usuń
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -77,10 +81,10 @@ export default function EditBookDialog(props: IProps) {
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                 >
                     <Alert onClose={handleAlertClose} severity="success" sx={{ width: '100%' }}>
-                        Edytowano książkę!
+                        Usunięto autora!
                     </Alert>
                 </Snackbar>
             </Portal>
         </div>
-    )
+    );
 }

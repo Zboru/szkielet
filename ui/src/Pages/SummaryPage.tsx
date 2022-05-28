@@ -16,11 +16,11 @@ export default function SummaryPage() {
         return (
             <ol>
                 {authors.map(author => {
-                    return <li>
+                    return <li key={author._id}>
                         <Link to={`/authors/${author._id}`}>{author.firstName} {author.lastName}</Link>
                         <ol>
                             {author.books?.map(book => {
-                                return <li><Link to={`/books/${book._id}`}>{book.name}</Link></li>
+                                return <li key={book._id}><Link to={`/books/${book._id}`}>{book.name}</Link></li>
                             })}
                         </ol>
                     </li>

@@ -1,9 +1,11 @@
+import { IconButton } from "@mui/material";
 import { DataGrid, GridColDef, GridRowsProp } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { Book } from "../../Types/Models";
 import DeleteBookDialog from "./DeleteBookDialog";
-import EditBookDialog from "./EditBookDialog";
+import { Edit } from "@mui/icons-material";
 import ShowBookLink from "./ShowBookLink";
+import { useNavigate } from "react-router-dom";
 
 interface IProps {
     books: Book[];
@@ -11,6 +13,7 @@ interface IProps {
 
 export default function BooksDataGrid(props: IProps) {
     const [books, setBooks] = useState<Book[]>([]);
+    const navigate = useNavigate();
 
     useEffect(()=>{
         setBooks(props.books);
@@ -20,11 +23,17 @@ export default function BooksDataGrid(props: IProps) {
         setBooks(books.filter(b => b._id !== book._id));
     }
 
+    const editBook = (book: Book) => {
+        navigate(`/books/${book._id}/edit`);
+    }
+
     const renderButtons = (params: {row: Book}) => {
         return (
             <div style={{display: 'flex'}}>
-                <EditBookDialog book={params.row}/>
                 <ShowBookLink book={params.row}/>
+                <IconButton onClick={() => editBook(params.row)}>
+                    <Edit />
+                </IconButton>
                 <DeleteBookDialog onDelete={onDelete} book={params.row}/>
             </div>
         )
