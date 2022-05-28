@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 import Author from "../models/Author";
-import Book from "../models/Book";
+import Book, { BookValidationSchema } from "../models/Book";
 
 export class BookController {
 
     public static async getBooks(req: Request, res: Response): Promise<void> {
-        const books = await Book.find().populate('author');
         try {
+            const books = await Book.find().populate('author');
             res.status(200).json(books)
         } catch (err) {
             res.status(500).json({
@@ -29,15 +29,15 @@ export class BookController {
     }
 
     public static async storeBook(req: Request, res: Response): Promise<void> {
-        const book = new Book(req.body);
-
         try {
+            const validatedPayload = BookValidationSchema.validate(req.body);
+            const book = new Book(validatedPayload.value);
             book.save();
 
             const author = await Author.findById(book.author);
             author.books.push(book._id);
             author.save();
-            
+
             res.status(201).json(book);
         } catch (err) {
             res.status(500).json({
@@ -49,7 +49,8 @@ export class BookController {
 
     public static async updateBook(req: Request, res: Response): Promise<void> {
         try {
-            const book = await Book.findByIdAndUpdate(req.params.id, req.body, {
+            const validatedPayload = BookValidationSchema.validate(req.body);
+            const book = await Book.findByIdAndUpdate(req.params.id, validatedPayload.value, {
                 new: true,
                 runValidators: true
             });
@@ -64,7 +65,7 @@ export class BookController {
 
     public static async deleteBook(req: Request, res: Response): Promise<void> {
         try {
-            const book = await Book.findByIdAndDelete(req.params.id);
+            await Book.findByIdAndDelete(req.params.id);
             res.status(204).json("Success")
         } catch (err) {
             res.status(500).json({

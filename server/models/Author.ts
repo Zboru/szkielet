@@ -1,3 +1,4 @@
+import Joi from "joi";
 import mongoose from "mongoose";
 export const AuthorSchema = new mongoose.Schema({
     firstName: {
@@ -17,5 +18,12 @@ export const AuthorSchema = new mongoose.Schema({
         ref: "Book"
     }]
 })
+
+export const AuthorValidationSchema = Joi.object().keys({
+    firstName: Joi.string().alphanum().required(),
+    lastName: Joi.string().alphanum().required(),
+    dateOfBirth: Joi.string().required(),
+})
+
 const Author = mongoose.model('Author', AuthorSchema);
 export default Author;
