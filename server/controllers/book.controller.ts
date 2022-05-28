@@ -30,8 +30,14 @@ export class BookController {
 
     public static async storeBook(req: Request, res: Response): Promise<void> {
         try {
-            const validatedPayload = BookValidationSchema.validate(req.body);
-            const book = new Book(validatedPayload.value);
+            const { value, error } = BookValidationSchema.validate(req.body);
+
+            if (error !== undefined) {
+                const message = error.details.map(i => i.message).join(',')
+                throw message;
+            }
+
+            const book = new Book(value);
             book.save();
 
             const author = await Author.findById(book.author);
@@ -49,8 +55,14 @@ export class BookController {
 
     public static async updateBook(req: Request, res: Response): Promise<void> {
         try {
-            const validatedPayload = BookValidationSchema.validate(req.body);
-            const book = await Book.findByIdAndUpdate(req.params.id, validatedPayload.value, {
+            const { value, error } = BookValidationSchema.validate(req.body);
+
+            if (error !== undefined) {
+                const message = error.details.map(i => i.message).join(',')
+                throw message;
+            }
+
+            const book = await Book.findByIdAndUpdate(req.params.id, value, {
                 new: true,
                 runValidators: true
             });

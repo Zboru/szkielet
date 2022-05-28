@@ -22,7 +22,7 @@ export const AuthorSchema = new mongoose.Schema({
 export const AuthorValidationSchema = Joi.object().keys({
     firstName: Joi.string().alphanum().required(),
     lastName: Joi.string().alphanum().required(),
-    dateOfBirth: Joi.string().required(),
+    dateOfBirth: Joi.string().pattern(new RegExp(/\d{2}-\d{2}-\d{4}/)).required(),
 })
 
 const Author = mongoose.model('Author', AuthorSchema);

@@ -30,8 +30,14 @@ export class AuthorController {
 
     public static async storeAuthor(req: Request, res: Response): Promise<void> {
         try {
-            const validatedPayload = AuthorValidationSchema.validate(req.body);
-            const author = new Author(validatedPayload.value);
+            const { value, error } = AuthorValidationSchema.validate(req.body);
+
+            if (error !== undefined) {
+                const message = error.details.map(i => i.message).join(',')
+                throw message;
+            }
+
+            const author = new Author(value);
             author.save();
             res.status(201).json(author)
         } catch (err) {
@@ -44,8 +50,14 @@ export class AuthorController {
 
     public static async updateAuthor(req: Request, res: Response): Promise<void> {
         try {
-            const validatedPayload = AuthorValidationSchema.validate(req.body);
-            const author = await Author.findByIdAndUpdate(req.params.id, validatedPayload.value, {
+            const { value, error } = AuthorValidationSchema.validate(req.body);
+
+            if (error !== undefined) {
+                const message = error.details.map(i => i.message).join(',')
+                throw message;
+            }
+
+            const author = await Author.findByIdAndUpdate(req.params.id, value, {
                 new: true,
                 runValidators: true
             });
