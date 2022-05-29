@@ -17,7 +17,7 @@ export const BookSchema = new mongoose.Schema({
 })
 
 export const BookValidationSchema = Joi.object().keys({
-    name: Joi.string().alphanum().min(1).max(45).required(),
+    name: Joi.string().min(1).max(45).required(),
     pageCount: Joi.number().min(1).max(2000).required(),
     author: Joi.string().required()
 })

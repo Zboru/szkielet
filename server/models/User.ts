@@ -1,34 +1,40 @@
 import mongoose from "mongoose";
-import passportLocalMongoose from "passport-local-mongoose";
-const Schema = mongoose.Schema;
+import jwt from "jsonwebtoken"
+import Joi from "joi";
+import passwordComplexity from "joi-password-complexity";
 
-const Session = new Schema({
-    refreshToken: {
-        type: String,
-        default: "",
-    },
-})
-
-const User = new Schema({
+export const UserSchema = new mongoose.Schema({
     name: {
         type: String,
-        default: "",
+        required: true
     },
-    authStrategy: {
+    email: {
         type: String,
-        default: "local",
+        required: true
     },
-    refreshToken: {
-        type: [Session],
-    }
-})
-
-User.set("toJSON", {
-    transform: function (doc, ret, options) {
-        delete ret.refreshToken
-        return ret
+    password: {
+        type: String,
+        required: true
     },
 })
-User.plugin(passportLocalMongoose)
 
-module.exports = mongoose.model("User", User)
+UserSchema.methods.generateAuthToken = function () {
+    const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET || "", {
+        expiresIn: "7d",
+    })
+    return token;
+}
+
+export const UserValidationSchema = Joi.object().keys({
+    name: Joi.string().required(),
+    email: Joi.string().email().required(),
+    password: passwordComplexity().required(),
+})
+
+export const UserLoginValidationSchema = Joi.object().keys({
+    email: Joi.string().email().required(),
+    password: passwordComplexity().required(),
+})
+
+const User = mongoose.model('User', UserSchema);
+export default User;
