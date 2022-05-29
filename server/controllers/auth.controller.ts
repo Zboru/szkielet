@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import User, { UserLoginValidationSchema } from "../models/User";
+import User, { UserValidationSchema } from "../models/User";
 export class AuthController {
     public static async loginUser(req: Request, res: Response): Promise<void> {
         try {
-            const { error, value } = UserLoginValidationSchema.validate(req.body);
+            const { error, value } = UserValidationSchema.validate(req.body);
 
             if (error !== undefined) {
                 const message = error.details.map(i => i.message).join(',')
@@ -28,7 +28,7 @@ export class AuthController {
 
             const token = user.generateAuthToken();
 
-            res.status(200).json({ data: token, message: "Zalogowano!" })
+            res.status(200).json(token)
         } catch (err) {
             res.status(500).json({
                 status: 'Failed',
